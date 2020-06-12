@@ -89,7 +89,7 @@ npm i @openzeppelin/upgrades
 ```
 Now, let’s write our exchange contract in `contracts/TokenExchange.sol`, using an *initializer* to set its initial state:
 
-![](tokenexchange_contract.png)
+![](images/tokenexchange_contract.png)
 >Solidity 0.6.8 introduces SPDX license identifiers so developers can specify the [license] (https://spdx.org/licenses/) the contract uses. E.g. OpenZeppelin Contracts use the MIT license. SPDX license identifiers should be added to the top of contract files. The following identifier should be added to the top of your contract (example uses MIT license):
 ```
 // SPDX-License-Identifier: MIT
@@ -98,7 +98,7 @@ Now, let’s write our exchange contract in `contracts/TokenExchange.sol`, using
 Note the usage of the `initializer` modifier in the `initialize` method. This guarantees that once we have deployed our contract, no one can call into that function again to alter the token or the rate.
 
 Let’s now create and initialize our new `TokenExchange` contract:
-![](tokenexchange_deployment.png)
+![](images/tokenexchange_deployment.png)
 > For Visual Studio Code users, if you get an `File import callback not supported` error due to the imported packages, consider adding the following to your VS Code settings:
 ```
 "solidity.packageDefaultDependenciesContractsDirectory": "",
@@ -107,7 +107,7 @@ Let’s now create and initialize our new `TokenExchange` contract:
 
 Our exchange is almost ready! We only need to fund it, so it can send tokens to purchasers. Let’s do that using the `npx oz send-tx` command, to transfer the full token balance from our own account to the exchange contract. Make sure to replace the recipient of the transfer with the `TokenExchange` address you got from the previous command.
 
-![](send_tokens_to_exchange.png)
+![](images/send_tokens_to_exchange.png)
 All set! We can start playing with our brand new token exchange.
 ## Summary
 We have built a more complex setup in this tutorial, and learned several concepts along the way. We introduced [Ethereum Packages](https://blog.openzeppelin.com/open-source-collaboration-in-the-blockchain-era-evm-packages/) as dependencies for our projects, allowing us to spin up a new token with little effort.
