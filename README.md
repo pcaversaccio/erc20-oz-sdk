@@ -70,4 +70,9 @@ Next we get the accounts we have setup
 
 Then we mint 100 TERC20 to our default account
 ![](images/minting.png)
-> The standard ERC20 smart contract has 18 decimals, i.e. 1 token = $10^18$.
+> The standard ERC20 smart contract has 18 decimals, i.e. 1 token = 10^18.
+
+We can check that the initial supply was properly allocated by using the `balance` command. Make sure to use the address where your ERC20 token instance was created.
+![](images/check_account.png)
+
+Great! We can now write an exchange contract and connect it to this token when we deploy it.
