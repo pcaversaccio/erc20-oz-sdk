@@ -70,4 +70,4 @@ Next we get the accounts we have setup
 
 Then we mint 100 TERC20 to our default account
 ![](images/minting.png)
-> The standard ERC20 smart contract has 18 decimals, i.e. 1 token = 10^18.
+> The standard ERC20 smart contract has 18 decimals, i.e. 1 token = $10^18$.
