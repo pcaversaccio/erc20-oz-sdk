@@ -109,5 +109,18 @@ Our exchange is almost ready! We only need to fund it, so it can send tokens to 
 
 ![](images/send_tokens_to_exchange.png)
 All set! We can start playing with our brand new token exchange.
+
+## Using Our Exchange
+Now that we have initialized our exchange contract and seeded it with funds, we can test it out by purchasing tokens. Our exchange contract will send tokens back automatically when we send ETH to it, so let’s test it by using the `npx oz transfer` command. This command allows us to send funds to any address; in this case, we will use it to send ETH to our `TokenExchange` instance:
+
+![](images/send_eth.png)
+
+> Make sure you replace the receiver account with the corresponding address where your `TokenExchange` was created.
+
+We can now use `npx oz balance` again, to check the token balance of the address that made the purchase. Since we sent 0.1 ETH, and we used a 1:10 exchange rate, we should see a balance of 1 TERC20 (TestERC20Token).
+
+![](images/balance_tokens.png)
+
+Success! We have our exchange up and running, gathering ETH in exchange for our tokens.
 ## Summary
 We have built a more complex setup in this tutorial, and learned several concepts along the way. We introduced [Ethereum Packages](https://blog.openzeppelin.com/open-source-collaboration-in-the-blockchain-era-evm-packages/) as dependencies for our projects, allowing us to spin up a new token with little effort.
