@@ -54,7 +54,9 @@ Let’s deploy an ERC20 token contract to our development network. Make sure to 
 ```
  npx ganache-cli --deterministic
  ```
- For setting up the token, we will be using the [ERC20PresetMinterPauser](https://github.com/OpenZeppelin/openzeppelin-contracts-ethereum-package/blob/master/contracts/presets/ERC20PresetMinterPauser.sol) implementation provided by the OpenZeppelin package. We will *initialise* the instance with the token metadata (name, symbol), and then mint a large initial supply for one of our accounts.
+ For setting up the token, we will be using the [ERC20PresetMinterPauser](https://github.com/OpenZeppelin/openzeppelin-contracts-ethereum-package/blob/master/contracts/presets/ERC20PresetMinterPauser.sol) implementation provided by the OpenZeppelin package. We will *initialize* the instance with the token metadata (name, symbol), and then mint a large initial supply for one of our accounts.
 
 Check the RPC server for your Ganache environment and adjust the correct port in the `network.js` file.
 > Usually you have to adjust the port from 8545 to 7545.
+
+![](images/ERC20_deployment.png)
