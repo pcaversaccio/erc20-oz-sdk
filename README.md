@@ -26,7 +26,7 @@ Use `npm` to create a `package.json` file:
 npm init -y
 ```
 
-And initialise the OpenZeppelin SDK project:
+And initialize the OpenZeppelin SDK project:
 
 ```
 npx oz init
@@ -53,8 +53,8 @@ Let’s deploy an ERC20 token contract to our `development` network. Make sure t
 
 ```
  npx ganache-cli --deterministic
- ```
- For setting up the token, we will be using the [ERC20PresetMinterPauser](https://github.com/OpenZeppelin/openzeppelin-contracts-ethereum-package/blob/master/contracts/presets/ERC20PresetMinterPauser.sol) implementation provided by the OpenZeppelin package. We will *initialize* the instance with the token metadata (name, symbol), and then mint a large initial supply for one of our accounts.
+```
+For setting up the token, we will be using the [ERC20PresetMinterPauser](https://github.com/OpenZeppelin/openzeppelin-contracts-ethereum-package/blob/master/contracts/presets/ERC20PresetMinterPauser.sol) implementation provided by the OpenZeppelin package. We will *initialize* the instance with the token metadata (name, symbol), and then mint a large initial supply for one of our accounts.
 
 Check the RPC server for your Ganache environment and adjust the correct port in the `network.js` file.
 > Usually you have to adjust the port from 8545 to 7545.
@@ -76,3 +76,38 @@ We can check that the initial supply was properly allocated by using the `balanc
 ![](images/check_account.png)
 
 Great! We can now write an exchange contract and connect it to this token when we deploy it.
+
+## Token Exchange Smart Contract
+In order to transfer an amount of tokens every time it receives ETH, our exchange contract will need to store the token contract address and the exchange rate in its state. We will set these two values during initialization, when we deploy the instance with `npx oz deploy`.
+
+Because we’re writing upgradeable contracts we cannot use [Solidity constructors](https://docs.openzeppelin.com/upgrades/2.8/proxies#the-constructor-caveat). Instead, we need to use *initializers*. An initializer is just a regular Solidity function, with an additional check to ensure that it can be called only once.
+
+To make coding initializers easy, [OpenZeppelin Upgrades](https://docs.openzeppelin.com/upgrades/2.8/) provides a base `Initializable` contract, that includes an `initializer` modifier that takes care of this. You will first need to install it:
+
+```
+npm i @openzeppelin/upgrades
+```
+Now, let’s write our exchange contract in `contracts/TokenExchange.sol`, using an *initializer* to set its initial state:
+
+![](tokenexchange_contract.png)
+>Solidity 0.6.8 introduces SPDX license identifiers so developers can specify the [license] (https://spdx.org/licenses/) the contract uses. E.g. OpenZeppelin Contracts use the MIT license. SPDX license identifiers should be added to the top of contract files. The following identifier should be added to the top of your contract (example uses MIT license):
+```
+// SPDX-License-Identifier: MIT
+```
+
+Note the usage of the `initializer` modifier in the `initialize` method. This guarantees that once we have deployed our contract, no one can call into that function again to alter the token or the rate.
+
+Let’s now create and initialize our new `TokenExchange` contract:
+![](tokenexchange_deployment.png)
+> For Visual Studio Code users, if you get an `File import callback not supported` error due to the imported packages, consider adding the following to your VS Code settings:
+```
+"solidity.packageDefaultDependenciesContractsDirectory": "",
+"solidity.packageDefaultDependenciesDirectory": "node_modules"
+```
+
+Our exchange is almost ready! We only need to fund it, so it can send tokens to purchasers. Let’s do that using the `npx oz send-tx` command, to transfer the full token balance from our own account to the exchange contract. Make sure to replace the recipient of the transfer with the `TokenExchange` address you got from the previous command.
+
+![](send_tokens_to_exchange.png)
+All set! We can start playing with our brand new token exchange.
+## Summary
+We have built a more complex setup in this tutorial, and learned several concepts along the way. We introduced [Ethereum Packages](https://blog.openzeppelin.com/open-source-collaboration-in-the-blockchain-era-evm-packages/) as dependencies for our projects, allowing us to spin up a new token with little effort.
