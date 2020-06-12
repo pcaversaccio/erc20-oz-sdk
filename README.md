@@ -66,13 +66,16 @@ Let’s break down what we did in the command above. We first chose to create an
 We now have a working ERC20 token contract in our `development` network.
 
 Next we get the accounts we have setup
+
 ![](images/default_account.png)
 
 Then we mint 100 TERC20 to our default account
+
 ![](images/minting.png)
 > The standard ERC20 smart contract has 18 decimals, i.e. 1 token = 10^18.
 
 We can check that the initial supply was properly allocated by using the `balance` command. Make sure to use the address where your ERC20 token instance was created.
+
 ![](images/check_account.png)
 
 Great! We can now write an exchange contract and connect it to this token when we deploy it.
@@ -98,6 +101,7 @@ Now, let’s write our exchange contract in `contracts/TokenExchange.sol`, using
 Note the usage of the `initializer` modifier in the `initialize` method. This guarantees that once we have deployed our contract, no one can call into that function again to alter the token or the rate.
 
 Let’s now create and initialize our new `TokenExchange` contract:
+
 ![](images/tokenexchange_deployment.png)
 > For Visual Studio Code users, if you get an `File import callback not supported` error due to the imported packages, consider adding the following to your VS Code settings:
 ```
