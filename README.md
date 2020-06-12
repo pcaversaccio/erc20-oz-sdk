@@ -37,3 +37,13 @@ later can be upgraded, and many more things.
 
 Run `openzeppelin --help` for more details about thes and all the other functions of the
 OpenZeppelin CLI.
+
+## ERC20 Smart Contract
+We first download the OpenZepplin smart contract library.
+```
+npm i @openzeppelin/contract
+```
+```
+cd .\contracts\
+npx oz compile
+```
