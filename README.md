@@ -49,7 +49,7 @@ npx oz link @openzeppelin/contracts-ethereum-package
 This command will download the Ethereum Package (bundled as a regular npm package), and connect it to your OpenZeppelin project. We now have all of OpenZeppelin contracts at our disposal, so let’s create an ERC20 token!
 > Make sure you install `@openzeppelin/contracts-ethereum-package` and not the vanilla `@openzeppelin/contracts`. The latter is set up for general usage, while `@openzeppelin/contracts-ethereum-package` is tailored for being used with [OpenZeppelin Upgrades](https://docs.openzeppelin.com/upgrades/2.8/). This means that its contracts are [already set up to be upgradeable](https://docs.openzeppelin.com/upgrades/2.8/writing-upgradeable#use-upgradeable-packages).
 
-Let’s deploy an ERC20 token contract to our development network. Make sure to have a [Ganache](https://www.trufflesuite.com/ganache) instance running, or start one by running:
+Let’s deploy an ERC20 token contract to our `development` network. Make sure to have a [Ganache](https://www.trufflesuite.com/ganache) instance running, or start one by running:
 
 ```
  npx ganache-cli --deterministic
@@ -60,3 +60,14 @@ Check the RPC server for your Ganache environment and adjust the correct port in
 > Usually you have to adjust the port from 8545 to 7545.
 
 ![](images/ERC20_deployment.png)
+
+Let’s break down what we did in the command above. We first chose to create an instance of the `ERC20PresetMinterPauserUpgradeSafe` contract from the `@openzeppelin/contracts-ethereum-package` package we had linked before, and to create it in the local `development` network. We are then instructing the CLI to *initialize* it with the initial values needed to set up our token. This requires us to choose the appropriate `initialize` function, and input all the required arguments. The OpenZeppelin CLI will then atomically deploy and initialize the new instance in a single transaction.
+
+We now have a working ERC20 token contract in our `development` network.
+
+Next we get the accounts we have setup
+![](images/default_account.png)
+
+Then we mint 100 TERC20 to our default account
+![](images/minting.png)
+> The standard ERC20 smart contract has 18 decimals, i.e. 1 token = 10^18.
