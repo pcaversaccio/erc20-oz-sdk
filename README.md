@@ -93,7 +93,7 @@ npm i @openzeppelin/upgrades
 Now, let’s write our exchange contract in `contracts/TokenExchange.sol`, using an *initializer* to set its initial state:
 
 ![](images/tokenexchange_contract.png)
-> Solidity 0.6.8 introduces SPDX license identifiers so developers can specify the [license] (https://spdx.org/licenses/) the contract uses. E.g. OpenZeppelin Contracts use the MIT license. SPDX license identifiers should be added to the top of contract files. The following identifier should be added to the top of your contract (example uses MIT license):
+> Solidity 0.6.8 introduces SPDX license identifiers so developers can specify the [npm documentation on global installs permission errors](https://docs.npmjs.com/resolving-eacces-permissions-errors-when-installing-packages-globally) [license] (https://spdx.org/licenses/) the contract uses. E.g. OpenZeppelin Contracts use the MIT license. SPDX license identifiers should be added to the top of contract files. The following identifier should be added to the top of your contract (example uses MIT license):
 ```
 // SPDX-License-Identifier: MIT
 ```
