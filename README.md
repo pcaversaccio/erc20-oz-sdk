@@ -11,7 +11,7 @@ npm install -g @openzeppelin/cli
 > If you get an `EACCESS permission denied` error while installing, please refer to the [npm documentation on global installs permission errors](https://docs.npmjs.com/resolving-eacces-permissions-errors-when-installing-packages-globally). Alternatively, you may run `sudo npm install --unsafe-perm --global @openzeppelin/cli`, but this is highly discouraged and you should rather either use a node version manager or manually change npm's default directory.
 
 ## Setup
-I recommend using the OpenZeppelin SDK through the `openzeppelin SDK` command line interface.
+We recommend using the OpenZeppelin SDK through the `openzeppelin SDK` command line interface.
 
 To start, create a directory for the project and access it:
 
@@ -126,5 +126,38 @@ We can now use `npx oz balance` again, to check the token balance of the address
 ![](images/balance_tokens.png)
 
 Success! We have our exchange up and running, gathering ETH in exchange for our tokens.
+
+## Upgrading the Exchange
+We forgot to add a method to withdraw the funds from the token exchange contract! While this would typically mean that the funds are locked in there forever, we can upgrade the contract with the OpenZeppelin CLI to add a way to collect those funds.
+> 
+While upgrading a contract is certainly useful in situations like this, where you need to fix a bug or add a missing feature, it could still be used to change the rules of the game. For instance, you could upgrade the token exchange contract to alter the rate at any time. Because of this, it is important to have appropriate project governance in place.
+
+Let’s modify the `TokenExchange` contract to add a withdraw method, only callable by an `owner`.
+
+![](images/tokenexchange_upgrade.png)
+
+When modifying your contract, you will have to place the `owner` variable **after** the other variables ([learn more](https://docs.openzeppelin.com/upgrades/2.8/writing-upgradeable#modifying-your-contracts) about this restriction). Don’t worry if you forget about it, the CLI will check this for you when you try to upgrade.
+> If you are familiar with **[OpenZeppelin Contracts](https://docs.openzeppelin.com/contracts/3.x/)**, you may be wondering why we didn’t simply extend from `Ownable` and used the `onlyOwner` modifier. The issue is OpenZeppelin Upgrades does not support extending from now contracts in an upgrade (if they declare their own state variables). Again, the CLI will alert you if you attempt to do this. Refer to the [upgrades documentation](https://docs.openzeppelin.com/upgrades/2.8/writing-upgradeable#modifying-your-contracts) for more info.
+
+The only thing missing is actually *setting* the `owner` of the contract. To do this, we can add another function that we will call when upgrading, making sure it can only be called once:
+
+![](images/tokenexchange_upgrade_2.png)
+
+First, we compile the contract using
+```
+npx oz compile
+```
+
+We can now upgrade our token exchange contract to this new version, and call `setOwner` during the upgrade process. The OpenZeppelin CLI will take care of making the upgrade and the call atomically in a single transaction.
+
+![](tokenexchange_upgrade_deploy.png)
+
+Yes! We can now call withdraw from our default address to extract all ETH sent to the exchange.
+
+![](tokenexchange_upgrade_withdraw.png)
+>You can also upgrade dependencies from an Ethereum Package. Upon a new release of `@openzeppelin/contracts-ethereum-package`, if you want to update your ERC20 to include the latest fixes, you can just `oz link` the new version and use `npx oz upgrade` to get your instance to the newest code.
+
 ## Summary
-We have built a more complex setup in this tutorial, and learned several concepts along the way. We introduced [Ethereum Packages](https://blog.openzeppelin.com/open-source-collaboration-in-the-blockchain-era-evm-packages/) as dependencies for our projects, allowing us to spin up a new token with little effort.
+We have built a more complex setup in this tutorial, and learned several concepts along the way. We introduced [Ethereum Packages](https://blog.openzeppelin.com/open-source-collaboration-in-the-blockchain-era-evm-packages/) as dependencies for our projects, allowing us to spin up a new token with little effort. 
+
+We also presented some [limitations](https://docs.openzeppelin.com/upgrades/2.8/writing-upgradeable) of [how Upgrades works](https://docs.openzeppelin.com/upgrades/2.8/proxies), such as [initializer methods](https://docs.openzeppelin.com/upgrades/2.8/writing-upgradeable#initializers) as a replacement for constructors, and [preserving the storage layout](https://docs.openzeppelin.com/upgrades/2.8/writing-upgradeable#modifying-your-contracts) when modifying our source code. We also learned how to run a function as a migration when upgrading a contract.
