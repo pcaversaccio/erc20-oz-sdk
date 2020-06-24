@@ -160,3 +160,56 @@ Yes! We can now call withdraw from our default address to extract all ETH sent t
 We have built a more complex setup in this tutorial, and learned several concepts along the way. We introduced [Ethereum Packages](https://blog.openzeppelin.com/open-source-collaboration-in-the-blockchain-era-evm-packages/) as dependencies for our projects, allowing us to spin up a new token with little effort. 
 
 We also presented some [limitations](https://docs.openzeppelin.com/upgrades/2.8/writing-upgradeable) of [how Upgrades works](https://docs.openzeppelin.com/upgrades/2.8/proxies), such as [initializer methods](https://docs.openzeppelin.com/upgrades/2.8/writing-upgradeable#initializers) as a replacement for constructors, and [preserving the storage layout](https://docs.openzeppelin.com/upgrades/2.8/writing-upgradeable#modifying-your-contracts) when modifying our source code. We also learned how to run a function as a migration when upgrading a contract.
+
+# Appendix
+## Connecting to the Rinkeby Test Network
+Since we are using public nodes, we will need to sign all our transactions locally. We will use `@truffle/hdwallet-provider` to do this, setting it up with our mnemonic. We will also tell the provider how to connect to the test network by using the [Infura](https://infura.io/) endpoint.
+
+Let’s start by installing the provider:
+```
+npm i @truffle/hdwallet-provider
+```
+
+Then, we will update our `networks.js` file with a new connection to the test network. Here we will use Rinkeby, but you can use whichever you want:
+```
+const { projectId, mnemonic } = require('./secrets.json');
+const HDWalletProvider = require('@truffle/hdwallet-provider');
+
+ module.exports = {
+   networks: {
+     development: {
+      ...
+     },
+    rinkeby: {
+      provider: () => new HDWalletProvider(
+        mnemonic, `https://rinkeby.infura.io/v3/${projectId}`
+      ),
+      networkId: 4,
+      gasPrice: 10e9
+    }
+   },
+ };
+```
+> See the `HDWalletProvider` documentation for information on [configuration](https://github.com/trufflesuite/truffle/tree/master/packages/hdwallet-provider) options.
+
+Note in the first line that we are loading the project id and mnemonic from a `secrets.json` file, which should look like the following, but using your own values. Make sure to `.gitignore` it!
+```
+{
+  "mnemonic": "pioneer tent curve wild ...",
+  "projectId": "305c13705054a8d918ad77549e402c72"
+}
+```
+
+We can now test out that this configuration is working by listing the accounts we have available for the Rinkeby network. Remember that yours will be different, as they depend on the mnemonic you used.
+
+![](images/rinkeby_account.png)
+
+We can also test the connection to the Infura node, by querying our account balance.
+
+![](images/rinkeby_account_balance.png)
+
+Since we have a non-zero balance, we are ready to deploy our smart contract on the Rinkeby test network:
+
+![](images/rinkeby_deploy.png)
+
+You can see your contract on a block explorer such as [Etherscan](https://rinkeby.etherscan.io/address/0x72C1f72a98EF6adc092195725245BB7D546917AF).
