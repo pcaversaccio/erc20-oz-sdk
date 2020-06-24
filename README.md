@@ -129,15 +129,14 @@ Success! We have our exchange up and running, gathering ETH in exchange for our 
 
 ## Upgrading the Exchange
 We forgot to add a method to withdraw the funds from the token exchange contract! While this would typically mean that the funds are locked in there forever, we can upgrade the contract with the OpenZeppelin CLI to add a way to collect those funds.
-> 
-While upgrading a contract is certainly useful in situations like this, where you need to fix a bug or add a missing feature, it could still be used to change the rules of the game. For instance, you could upgrade the token exchange contract to alter the rate at any time. Because of this, it is important to have appropriate project governance in place.
+> While upgrading a contract is certainly useful in situations like this, where you need to fix a bug or add a missing feature, it could still be used to change the rules of the game. For instance, you could upgrade the token exchange contract to alter the rate at any time. Because of this, it is important to have appropriate project governance in place.
 
 Let’s modify the `TokenExchange` contract to add a withdraw method, only callable by an `owner`.
 
 ![](images/tokenexchange_upgrade.png)
 
 When modifying your contract, you will have to place the `owner` variable **after** the other variables ([learn more](https://docs.openzeppelin.com/upgrades/2.8/writing-upgradeable#modifying-your-contracts) about this restriction). Don’t worry if you forget about it, the CLI will check this for you when you try to upgrade.
-> If you are familiar with **[OpenZeppelin Contracts](https://docs.openzeppelin.com/contracts/3.x/)**, you may be wondering why we didn’t simply extend from `Ownable` and used the `onlyOwner` modifier. The issue is OpenZeppelin Upgrades does not support extending from now contracts in an upgrade (if they declare their own state variables). Again, the CLI will alert you if you attempt to do this. Refer to the [upgrades documentation](https://docs.openzeppelin.com/upgrades/2.8/writing-upgradeable#modifying-your-contracts) for more info.
+> If you are familiar with **[OpenZeppelin Contracts](https://docs.openzeppelin.com/contracts/3.x/)**, you may be wondering why we didn’t simply extend from `Ownable` and used the `onlyOwner` modifier. The issue is OpenZeppelin Upgrades does not support extending from now contracts in an upgrade (if they declare their own state variables). Again, the CLI will alert you if you attempt to do this. Refer to the [Upgrades documentation](https://docs.openzeppelin.com/upgrades/2.8/writing-upgradeable#modifying-your-contracts) for more info.
 
 The only thing missing is actually *setting* the `owner` of the contract. To do this, we can add another function that we will call when upgrading, making sure it can only be called once:
 
@@ -150,11 +149,11 @@ npx oz compile
 
 We can now upgrade our token exchange contract to this new version, and call `setOwner` during the upgrade process. The OpenZeppelin CLI will take care of making the upgrade and the call atomically in a single transaction.
 
-![](tokenexchange_upgrade_deploy.png)
+![](images/tokenexchange_upgrade_deploy.png)
 
 Yes! We can now call withdraw from our default address to extract all ETH sent to the exchange.
 
-![](tokenexchange_upgrade_withdraw.png)
+![](images/tokenexchange_upgrade_withdraw.png)
 >You can also upgrade dependencies from an Ethereum Package. Upon a new release of `@openzeppelin/contracts-ethereum-package`, if you want to update your ERC20 to include the latest fixes, you can just `oz link` the new version and use `npx oz upgrade` to get your instance to the newest code.
 
 ## Summary
