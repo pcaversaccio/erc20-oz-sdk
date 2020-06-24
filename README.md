@@ -46,10 +46,10 @@ To link the OpenZeppelin Contracts Ethereum Package into your project, simply ru
 npx oz link @openzeppelin/contracts-ethereum-package
 ```
 
-This command will download the Ethereum Package (bundled as a regular npm package) and connect it to your OpenZeppelin project. We now have all of OpenZeppelin Contracts at our disposal, so let’s create an ERC20 token!
+This command will download the Ethereum Package (bundled as a regular npm package) and connect it to your OpenZeppelin project. We now have all of OpenZeppelin Contracts at our disposal, so let us create an ERC20 token!
 > Make sure you install `@openzeppelin/contracts-ethereum-package` and not the vanilla `@openzeppelin/contracts`. The latter is set up for general usage, while `@openzeppelin/contracts-ethereum-package` is tailored for being used with [OpenZeppelin Upgrades](https://docs.openzeppelin.com/upgrades/2.8/). This means that its contracts are [already set up to be upgradeable](https://docs.openzeppelin.com/upgrades/2.8/writing-upgradeable#use-upgradeable-packages).
 
-Let’s deploy an ERC20 token contract to our `development` network. Make sure to have a [Ganache](https://www.trufflesuite.com/ganache) instance running, or start one by running:
+Let us deploy an ERC20 token contract to our `development` network. Make sure to have a [Ganache](https://www.trufflesuite.com/ganache) instance running, or start one by running:
 
 ```
  npx ganache-cli --deterministic
@@ -61,7 +61,7 @@ Check the RPC server for your Ganache environment and adjust the correct port in
 
 ![](images/ERC20_deployment.png)
 
-Let’s break down what we did in the command above. We first chose to create an instance of the `ERC20PresetMinterPauserUpgradeSafe` contract from the `@openzeppelin/contracts-ethereum-package` package we had linked before, and to create it in the local `development` network. We are then instructing the CLI to *initialize* it with the initial values needed to set up our token. This requires us to choose the appropriate `initialize` function, and input all the required arguments. The OpenZeppelin CLI will then atomically deploy and initialize the new instance in a single transaction.
+Let us break down what we did in the command above. We first chose to create an instance of the `ERC20PresetMinterPauserUpgradeSafe` contract from the `@openzeppelin/contracts-ethereum-package` package we had linked before, and to create it in the local `development` network. We are then instructing the CLI to *initialize* it with the initial values needed to set up our token. This requires us to choose the appropriate `initialize` function, and input all the required arguments. The OpenZeppelin CLI will then atomically deploy and initialize the new instance in a single transaction.
 
 We now have a working ERC20 token contract in our `development` network.
 
@@ -83,14 +83,14 @@ Great! We can now write an exchange contract and connect it to this token when w
 ## Token Exchange Smart Contract
 In order to transfer an amount of tokens every time it receives ETH, our exchange contract will need to store the token contract address and the exchange rate in its state. We will set these two values during initialization, when we deploy the instance with `npx oz deploy`.
 
-Because we’re writing upgradeable contracts we cannot use [Solidity constructors](https://docs.openzeppelin.com/upgrades/2.8/proxies#the-constructor-caveat). Instead, we need to use *initializers*. An initializer is just a regular Solidity function, with an additional check to ensure that it can be called only once.
+Because we are writing upgradeable contracts we cannot use [Solidity constructors](https://docs.openzeppelin.com/upgrades/2.8/proxies#the-constructor-caveat). Instead, we need to use *initializers*. An initializer is just a regular Solidity function, with an additional check to ensure that it can be called only once.
 
 To make coding initializers easy, [OpenZeppelin Upgrades](https://docs.openzeppelin.com/upgrades/2.8/) provides a base `Initializable` contract, that includes an `initializer` modifier that takes care of this. You will first need to install it:
 
 ```
 npm i @openzeppelin/upgrades
 ```
-Now, let’s write our exchange contract in `contracts/TokenExchange.sol`, using an *initializer* to set its initial state:
+Now, let us write our exchange contract in `contracts/TokenExchange.sol`, using an *initializer* to set its initial state:
 
 ![](images/tokenexchange_contract.png)
 > Solidity 0.6.8 introduces SPDX license identifiers so developers can specify the [license](https://spdx.org/licenses/) the contract uses. E.g. OpenZeppelin Contracts use the MIT license. SPDX license identifiers should be added to the top of contract files. The following identifier should be added to the top of your contract (example uses MIT license):
@@ -100,7 +100,7 @@ Now, let’s write our exchange contract in `contracts/TokenExchange.sol`, using
 
 Note the usage of the `initializer` modifier in the `initialize` method. This guarantees that once we have deployed our contract, no one can call into that function again to alter the token or the rate.
 
-Let’s now create and initialize our new `TokenExchange` contract:
+Let us now create and initialize our new `TokenExchange` contract:
 
 ![](images/tokenexchange_deployment.png)
 > For Visual Studio Code users, if you get an `File import callback not supported` error due to the imported packages, consider adding the following to your VS Code settings:
@@ -109,13 +109,13 @@ Let’s now create and initialize our new `TokenExchange` contract:
 "solidity.packageDefaultDependenciesDirectory": "node_modules"
 ```
 
-Our exchange is almost ready! We only need to fund it, so it can send tokens to purchasers. Let’s do that using the `npx oz send-tx` command, to transfer the full token balance from our own account to the exchange contract. Make sure to replace the recipient of the transfer with the `TokenExchange` address you got from the previous command.
+Our exchange is almost ready! We only need to fund it, so it can send tokens to purchasers. Let us do that using the `npx oz send-tx` command, to transfer the full token balance from our own account to the exchange contract. Make sure to replace the recipient of the transfer with the `TokenExchange` address you got from the previous command.
 
 ![](images/send_tokens_to_exchange.png)
 All set! We can start playing with our brand new token exchange.
 
 ## Using Our Exchange
-Now that we have initialized our exchange contract and seeded it with funds, we can test it out by purchasing tokens. Our exchange contract will send tokens back automatically when we send ETH to it, so let’s test it by using the `npx oz transfer` command. This command allows us to send funds to any address; in this case, we will use it to send ETH to our `TokenExchange` instance:
+Now that we have initialized our exchange contract and seeded it with funds, we can test it out by purchasing tokens. Our exchange contract will send tokens back automatically when we send ETH to it, so let us test it by using the `npx oz transfer` command. This command allows us to send funds to any address; in this case, we will use it to send ETH to our `TokenExchange` instance:
 
 ![](images/send_eth.png)
 
@@ -131,12 +131,12 @@ Success! We have our exchange up and running, gathering ETH in exchange for our 
 We forgot to add a method to withdraw the funds from the token exchange contract! While this would typically mean that the funds are locked in there forever, we can upgrade the contract with the OpenZeppelin CLI to add a way to collect those funds.
 > While upgrading a contract is certainly useful in situations like this, where you need to fix a bug or add a missing feature, it could still be used to change the rules of the game. For instance, you could upgrade the token exchange contract to alter the rate at any time. Because of this, it is important to have appropriate project governance in place.
 
-Let’s modify the `TokenExchange` contract to add a withdraw method, only callable by an `owner`.
+Let us modify the `TokenExchange` contract to add a withdraw method, only callable by an `owner`.
 
 ![](images/tokenexchange_upgrade.png)
 
-When modifying your contract, you will have to place the `owner` variable **after** the other variables ([learn more](https://docs.openzeppelin.com/upgrades/2.8/writing-upgradeable#modifying-your-contracts) about this restriction). Don’t worry if you forget about it, the CLI will check this for you when you try to upgrade.
-> If you are familiar with **[OpenZeppelin Contracts](https://docs.openzeppelin.com/contracts/3.x/)**, you may be wondering why we didn’t simply extend from `Ownable` and used the `onlyOwner` modifier. The issue is OpenZeppelin Upgrades does not support extending from now contracts in an upgrade (if they declare their own state variables). Again, the CLI will alert you if you attempt to do this. Refer to the [Upgrades documentation](https://docs.openzeppelin.com/upgrades/2.8/writing-upgradeable#modifying-your-contracts) for more info.
+When modifying your contract, you will have to place the `owner` variable **after** the other variables ([learn more](https://docs.openzeppelin.com/upgrades/2.8/writing-upgradeable#modifying-your-contracts) about this restriction). Don not worry if you forget about it, the CLI will check this for you when you try to upgrade.
+> If you are familiar with **[OpenZeppelin Contracts](https://docs.openzeppelin.com/contracts/3.x/)**, you may be wondering why we did not simply extend from `Ownable` and used the `onlyOwner` modifier. The issue is OpenZeppelin Upgrades does not support extending from now contracts in an upgrade (if they declare their own state variables). Again, the CLI will alert you if you attempt to do this. Refer to the [Upgrades documentation](https://docs.openzeppelin.com/upgrades/2.8/writing-upgradeable#modifying-your-contracts) for more info.
 
 The only thing missing is actually *setting* the `owner` of the contract. To do this, we can add another function that we will call when upgrading, making sure it can only be called once:
 
@@ -165,7 +165,7 @@ We also presented some [limitations](https://docs.openzeppelin.com/upgrades/2.8/
 ## Connecting to the Rinkeby Test Network
 Since we are using public nodes, we will need to sign all our transactions locally. We will use `@truffle/hdwallet-provider` to do this, setting it up with our mnemonic. We will also tell the provider how to connect to the test network by using the [Infura](https://infura.io/) endpoint.
 
-Let’s start by installing the provider:
+Let us start by installing the provider:
 ```
 npm i @truffle/hdwallet-provider
 ```
@@ -212,4 +212,4 @@ Since we have a non-zero balance, we are ready to deploy our smart contract on t
 
 ![](images/rinkeby_deploy.png)
 
-You can see your contract on a block explorer such as [Etherscan](https://rinkeby.etherscan.io/address/0x72C1f72a98EF6adc092195725245BB7D546917AF).
+You can see your (already verified) contract on a block explorer such as [Etherscan](https://rinkeby.etherscan.io/address/0x72C1f72a98EF6adc092195725245BB7D546917AF).
