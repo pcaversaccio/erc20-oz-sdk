@@ -32,10 +32,10 @@ And initialize the OpenZeppelin SDK project:
 npx oz init
 ```
 
-Now it is possible to use `npx openzeppelin deploy` to create instances for these contracts that 
+Now it is possible to use `npx oz deploy` to create instances for these contracts that 
 later can be upgraded and many more things.
 
-Run `npx openzeppelin --help` for more details about thes and all the other functions of the
+Run `npx oz --help` for more details about thes and all the other functions of the
 OpenZeppelin CLI.
 
 ## ERC20 Smart Contract
